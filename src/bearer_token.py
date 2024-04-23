@@ -1,14 +1,18 @@
 import requests
 import sys
+import json
 
 def get(username, password, api_url):
     auth_endpoint = api_url + '/login'
-    payload = {
-        'username': username,
-        'password': password
+    headersList = {
+    "Content-Type": "application/json" 
     }
+    payload = json.dumps({
+        "username": username,
+        "password": password
+    })
     try:
-        response = requests.post(auth_endpoint, json=payload)
+        response = requests.post(auth_endpoint, data=payload, headers=headersList)
         response.raise_for_status()
         bearer_token = response.json().get('token')
         if bearer_token:
