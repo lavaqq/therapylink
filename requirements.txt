@@ -3,3 +3,4 @@ python-dotenv
 argparse
 urllib3==1.26.15
 datetime
+pysftp

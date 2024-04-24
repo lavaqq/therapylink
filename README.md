@@ -14,6 +14,7 @@ This project interfaces with specific APIs and FTP services to fetch, process, a
 - Python-dotenv
 - Argparse
 - Datetime
+- pysftp
 - Additional dependencies are listed in the `requirements.txt` file.
 
 ### Installing
