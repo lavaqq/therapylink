@@ -1,78 +1,66 @@
 import xml.etree.ElementTree as ET
+import re
 from datetime import datetime
+import src.utils as utils
 
 def create(data, sendernr, sendername, receivernr, receivername, start_date, end_date):
     root = ET.Element('THERAPIE')
-    _SENDERNR = ET.SubElement(root, 'SENDERNR')
-    _SENDERNAME = ET.SubElement(root, 'SENDERNAME')
-    _RECEIVERNR = ET.SubElement(root, 'RECEIVERNR')
-    _RECEIVERNAME = ET.SubElement(root, 'RECEIVERNAME')
-    _CREATIONDATETIME = ET.SubElement(root, 'CREATIONDATETIME')
-    _STARTDATE = ET.SubElement(root, 'STARTDATE')
-    _ENDDATE = ET.SubElement(root, 'ENDDATE')
-    _SENDERNR.text = sendernr
-    _SENDERNAME.text = sendername
-    _RECEIVERNR.text = receivernr
-    _RECEIVERNAME.text = receivername
-    _CREATIONDATETIME.text = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    _STARTDATE.text = start_date
-    _ENDDATE.text = end_date
-    _PATIENTS = ET.SubElement(root, 'PATIENTS')
+    ET.SubElement(root, 'SENDERNR').text = sendernr
+    ET.SubElement(root, 'SENDERNAME').text = sendername
+    ET.SubElement(root, 'RECEIVERNR').text = receivernr
+    ET.SubElement(root, 'RECEIVERNAME').text = receivername
+    ET.SubElement(root, 'CREATIONDATETIME').text = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    ET.SubElement(root, 'STARTDATE').text = start_date
+    ET.SubElement(root, 'ENDDATE').text = end_date
+    patients = ET.SubElement(root, 'PATIENTS')
 
     for resident in data:
-        if resident['country'] != "France":
+        if rresident.get('country', '') == "Belgique":
             niss = "00000000000"
             keys_to_check = ['niss', 'social_security_number']
             for key in keys_to_check:
-                nissTmp = resident.get(key)
-                if nissTmp is not None:
-                    nissTmp = re.sub(r'[\s\.\-]', '', nissTmp)
-                    chiffres = re.findall(r'\d{11}', nissTmp)
-                    if chiffres:
-                        niss = chiffres[0]
+                niss_tmp = resident.get(key)
+                if niss_tmp is not None:
+                    niss_tmp = re.sub(r'[\s\.\-]', '', niss_tmp)
+                    found = re.findall(r'\d{11}', niss_tmp)
+                    if found:
+                        niss = found[0]
                         break
-            PATIENT = ET.SubElement(PATIENTS, 'PATIENT')
-            ID = ET.SubElement(PATIENT, 'ID')
-            ID.text = niss
-            NAME = ET.SubElement(PATIENT, 'NAME')
-            NAME.text = resident.get('lastname')
-            FIRSTNAME = ET.SubElement(PATIENT, 'FIRSTNAME')
-            FIRSTNAME.text = resident.get('firstname')
-            LOCATION1 = ET.SubElement(PATIENT, 'LOCATION1')
-            LOCATION1.text = resident.get('establishment')
-            LOCATION2 = ET.SubElement(PATIENT, 'LOCATION2')
-            LOCATION2.text = resident.get('establishment')
-            BIRTHDATE = ET.SubElement(PATIENT, 'BIRTHDATE')
-            BIRTHDATE.text = resident.get('birthdate')
-            DOCTORNAME = ET.SubElement(PATIENT, 'DOCTORNAME') # If multiple presc who have diff doctor ?
-            DOCTORNAME.text = resident.get('doctor_fullname')
-            DOCTORMEDREGNR = ET.SubElement(PATIENT, 'DOCTORMEDREGNR')
-            DOCTORMEDREGNR.text = resident.get('doctor_am_number')
-            PATIENTUNIDOSE = ET.SubElement(PATIENT, 'PATIENTUNIDOSE')
-            PATIENTUNIDOSE.text = "1"
-            PRODUCTS = ET.SubElement(PATIENT, 'PRODUCTS')
-            for medication in resident.get('medications'):
-                PRODUCT = ET.SubElement(PRODUCTS, 'PRODUCT')
-                PRODUCTID = ET.SubElement(PRODUCT, 'PRODUCTID')
-                PRODUCTID.text = str(medication.get('cnk'))
-                PRODUCTIDHOME = ET.SubElement(PRODUCT, 'PRODUCTIDHOME')
-                SPECIALITY = ET.SubElement(PRODUCT, 'SPECIALITY')
-                SPECIALITY.text = "1"
-                DCS = ET.SubElement(PRODUCT, 'DCS')
-                DCS.text = medication.get('name')
-                TABLETUNIDOSE = ET.SubElement(PRODUCT, 'TABLETUNIDOSE')
-                TABLETUNIDOSE.text = "1"
-                ADMS = ET.SubElement(PRODUCT, 'ADMS')
-                for date, details in medication.get('schedule'):
-                    for posology in details
-                        ADM = ET.SubElement(ADMS, 'ADM')
-                        QTY = ET.SubElement(ADM, 'QTY')
-                        QTY.text = posology.get('quantity') # .replace(",", ".") Only INT ?
-                        ADMDATE = ET.SubElement(ADM, 'ADMDATE')
-                        ADMDATE.text = date
-                        ADMHOUR = ET.SubElement(ADM, 'ADMHOUR')
-                        ADMHOUR.text = posology.get('time')
+            patient = ET.SubElement(patients, 'PATIENT')
+            ET.SubElement(patient, 'ID').text = niss
+            ET.SubElement(patient, 'NAME').text = resident.get('lastname', '')
+            ET.SubElement(patient, 'FIRSTNAME').text = resident.get('firstname', '')
+            ET.SubElement(patient, 'LOCATION1').text = resident.get('establishment', '')
+            ET.SubElement(patient, 'LOCATION2').text = resident.get('establishment', '')
+            ET.SubElement(patient, 'BIRTHDATE').text = resident.get('birthdate', '')
+            ET.SubElement(patient, 'DOCTORNAME').text = resident.get('doctor_fullname', '')
+            ET.SubElement(patient, 'DOCTORMEDREGNR').text = resident.get('doctor_am_number', '')
+            ET.SubElement(patient, 'PATIENTUNIDOSE').text = "1"
+            products = ET.SubElement(patient, 'PRODUCTS')
+
+            for medication_id, medication_details in resident['medications'].items():
+                cnk = medication_details.get('cnk')
+                if cnk is not None:
+                    product = ET.SubElement(products, 'PRODUCT')
+                    ET.SubElement(product, 'PRODUCTID').text = str(cnk)
+                    ET.SubElement(product, 'PRODUCTIDHOME')
+                    ET.SubElement(product, 'SPECIALITY').text = "1"
+                    ET.SubElement(product, 'DCS').text = medication_details.get('name', '')
+                    ET.SubElement(product, 'TABLETUNIDOSE').text = "1"
+                    adms = ET.SubElement(product, 'ADMS')
+                    for date, schedules in medication_details.get('schedule', {}).items():
+                        for period, details in schedules.items():
+                            adm = ET.SubElement(adms, 'ADM')
+                            ET.SubElement(adm, 'ADMDATE').text = date
+                            ET.SubElement(adm, 'QTY').text = utils.convert_quantity(details.get('quantity', ''))
+                            ET.SubElement(adm, 'ADMHOUR').text = details.get('time', '')
+                else:
+                    pass
+        else:
+            pass
+
     tree = ET.ElementTree(root)
     now = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = "00000554002_0000000000001234_"+now+"_TH"
-    tree.write(filename+'.xml')
+    filename = f"00000554002_0000000000001234_{now}_TH"
+    tree.write(filename + '.xml')
+
