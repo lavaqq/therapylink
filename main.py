@@ -33,11 +33,11 @@ def main():
         print(f"Missing environment variables: {', '.join(missing_vars)}. Make sure they are set in the .env file.")
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(description='Description of your program')
+    parser = argparse.ArgumentParser(description='Interfaces with specific APIs and FTP services to fetch, process, and transmit therapylink.')
     parser.add_argument('--start_date', default=NOW.strftime('%Y-%m-%d'), help='Start date (default is today)')
     parser.add_argument('--end_date', default=None, help='End date (default is None)')
     parser.add_argument('--days', type=int, default=25, help='Number of days to add to start date (default is 25).')
-    parser.add_argument('--send_ftp', type=int, default=1, help='Send to ftp (default is 1 (true)).')
+    parser.add_argument('--send_ftp', type=int, default=1, help='Send to FTP server (default is 1 (true)).')
     args = parser.parse_args()
 
     if args.days and args.end_date:
