@@ -43,6 +43,7 @@ API_PASSWORD=your_api_password_here
 FTP_HOSTNAME=your_ftp_hostname_here
 FTP_USER=your_ftp_username_here
 FTP_PASSWORD=your_ftp_password_here
+FTP_DIR=your_ftp_dir_here
 SENDERNR=your_sender_number_here
 SENDERNAME=your_sender_name_here
 RECEIVERNR=your_receiver_number_here
