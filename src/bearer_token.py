@@ -18,6 +18,7 @@ def get(username, password, api_url):
         data = response.json()
         token = data.get('token')
         if token:
+            print('Bearer token retrieved.')
             return token
         else:
             print("No token found in the response.")

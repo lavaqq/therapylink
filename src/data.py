@@ -22,6 +22,7 @@ def get(api_url, token, start_date, end_date):
         response.raise_for_status()
         data = response.json()
         if data:
+            print('Data retrieved.')
             return data
         else:
             print("Data not found in response.")
