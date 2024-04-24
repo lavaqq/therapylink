@@ -15,6 +15,7 @@ This project interfaces with specific APIs and FTP services to fetch, process, a
 - Argparse
 - Datetime
 - pysftp
+- logging
 - Additional dependencies are listed in the `requirements.txt` file.
 
 ### Installing
