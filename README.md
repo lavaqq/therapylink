@@ -58,7 +58,7 @@ BASE_FILENAME=your_base_filename_here
 To run the program, use the following command from the root directory:
 
 ```bash
-python main.py
+python main.py --send_ftp 0
 # or
 python main.py --start_date YYYY-MM-DD --days 30
 # or
@@ -68,6 +68,7 @@ python main.py --start_date YYYY-MM-DD --end_date YYYY-MM-DD
 - `--start_date`: The start date for the data processing (format: YYYY-MM-DD) (defaul is now()).
 - `--end_date`: Optional, specify the end date for the data processing.
 - `--days`: Number of days to add to the start date for calculating the end date (default is 25).
+- `--send_ftp`: Send to FTP server (default is 1 (true)).
 
 ## Help
 
