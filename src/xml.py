@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import re
 from datetime import datetime
 import src.utils as utils
+import os
 
 def create(data, sendernr, sendername, receivernr, receivername, start_date, end_date, base_filename):
     root = ET.Element('THERAPIE')
@@ -62,6 +63,8 @@ def create(data, sendernr, sendername, receivernr, receivername, start_date, end
 
     tree = ET.ElementTree(root)
     now = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = f"{base_filename}_{now}_TH"
-    tree.write(filename + '.xml')
-
+    output_dir = 'output'
+    os.makedirs(output_dir, exist_ok=True)
+    filename = f"{output_dir}/{base_filename}_{now}_TH.xml"
+    tree.write(filename, encoding='utf-8', xml_declaration=True) # Not sure about encoding and xml_declaration for the robot
+    return filename
