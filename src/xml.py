@@ -55,6 +55,7 @@ def create(data, sendernr, sendername, receivernr, receivername, start_date, end
                             ET.SubElement(adm, 'QTY').text = utils.convert_quantity(details.get('quantity', ''))
                             ET.SubElement(adm, 'ADMHOUR').text = details.get('time', '')
                 else:
+                    print(f"Medication with ID {medication_id} is missing a CNK value and will not be processed.")
                     pass
         else:
             pass
