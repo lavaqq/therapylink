@@ -1,4 +1,3 @@
-```
 # Therapylink
 
 ## Description
@@ -83,4 +82,3 @@ python main.py -h
 Contributors names and contact info
 
 - **lavaqq** - *Initial work* - [email](mailto:mlava@tuta.io)
-```
