@@ -46,6 +46,7 @@ SENDERNR=your_sender_number_here
 SENDERNAME=your_sender_name_here
 RECEIVERNR=your_receiver_number_here
 RECEIVERNAME=your_receiver_name_here
+BASE_FILENAME=your_base_filename_here
 ```
 
 **Note:** Replace `your_*_here` with actual values required for your environment.
